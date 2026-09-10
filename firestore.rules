@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Student profile & private user data (subjects, schedule, revisions, preferences)
+    match /users/{userId} {
+      allow read, write: if true;
+
+      match /{subcollections=**} {
+        allow read, write: if true;
+      }
+    }
+
+    // Community discussion posts
+    match /communityPosts/{postId} {
+      allow read, write: if true;
+    }
+  }
+}
+

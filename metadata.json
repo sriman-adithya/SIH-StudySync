@@ -1,0 +1,6 @@
+{
+  "name": "StudySync",
+  "description": "Smart study planner with AI topic breakdown, Ebbinghaus spaced revision, quiz mastery, notes, and community hub.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

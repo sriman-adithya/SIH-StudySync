@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Student profile credentials and study preferences",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "User identifier" },
+        "name": { "type": "string", "description": "Student's full display name" },
+        "email": { "type": "string", "format": "email", "description": "Student's registered email" },
+        "academicGoal": { "type": "string", "description": "Target exam or academic focus" },
+        "avatarColor": { "type": "string", "description": "Tailwind color class for avatar badge" },
+        "avatarInitials": { "type": "string", "description": "Two-character initials" },
+        "createdAt": { "type": "string", "description": "Date account was registered" }
+      },
+      "required": ["id", "name", "email", "academicGoal", "createdAt"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "Enrolled study course with detailed topic syllabus breakdown",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Subject unique ID" },
+        "userId": { "type": "string", "description": "Owner student user ID" },
+        "name": { "type": "string", "description": "Subject course title" },
+        "description": { "type": "string", "description": "Overview of course contents" },
+        "targetDate": { "type": "string", "description": "Exam deadline in YYYY-MM-DD" },
+        "color": { "type": "string", "description": "Gradient color classes" },
+        "icon": { "type": "string", "description": "Lucide icon identifier" },
+        "resourceNames": { "type": "array", "description": "Attached textbook or syllabus files" },
+        "webLinks": { "type": "array", "description": "Web links and online references" },
+        "rawNotes": { "type": "string", "description": "Syllabus notes or raw text" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "topics": { "type": "array", "description": "List of 15-20 min atomic curriculum topics" }
+      },
+      "required": ["id", "userId", "name", "targetDate", "createdAt", "topics"]
+    },
+    "ScheduleItem": {
+      "title": "ScheduleItem",
+      "description": "Daily scheduled subtopic study task",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Task identifier" },
+        "userId": { "type": "string", "description": "Owner student ID" },
+        "date": { "type": "string", "description": "Scheduled date YYYY-MM-DD" },
+        "subjectId": { "type": "string", "description": "Referenced subject" },
+        "subjectName": { "type": "string", "description": "Course title" },
+        "topicId": { "type": "string", "description": "Referenced atomic topic ID" },
+        "topicTitle": { "type": "string", "description": "Title of topic" },
+        "type": { "type": "string", "enum": ["new_study", "ebbinghaus_revision"], "description": "Study task type" },
+        "completed": { "type": "boolean", "description": "Whether completed" },
+        "estimatedMinutes": { "type": "number", "description": "Estimated study duration" }
+      },
+      "required": ["id", "userId", "date", "subjectId", "topicId", "topicTitle", "type", "completed"]
+    },
+    "RevisionItem": {
+      "title": "RevisionItem",
+      "description": "Ebbinghaus spaced repetition recall interval task",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Revision identifier" },
+        "userId": { "type": "string", "description": "Owner student ID" },
+        "topicId": { "type": "string", "description": "Target topic ID" },
+        "subjectId": { "type": "string", "description": "Subject course ID" },
+        "topicTitle": { "type": "string", "description": "Topic title" },
+        "subjectName": { "type": "string", "description": "Subject course name" },
+        "originalCompletionDate": { "type": "string", "description": "Initial study date" },
+        "scheduledDate": { "type": "string", "description": "Revision target date YYYY-MM-DD" },
+        "stageNumber": { "type": "number", "description": "Stage 1 (+1d) to Stage 5 (+30d)" },
+        "intervalDays": { "type": "number", "description": "Interval gap in days" },
+        "status": { "type": "string", "enum": ["pending", "completed"], "description": "Status" }
+      },
+      "required": ["id", "userId", "topicId", "subjectId", "scheduledDate", "stageNumber", "status"]
+    },
+    "CommunityPost": {
+      "title": "CommunityPost",
+      "description": "Shared doubt, insight, or resource discussion post",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Post ID" },
+        "authorId": { "type": "string", "description": "Author student user ID" },
+        "author": { "type": "string", "description": "Author display name" },
+        "authorAvatar": { "type": "string", "description": "Author initials" },
+        "subjectTag": { "type": "string", "description": "Associated subject" },
+        "topicTag": { "type": "string", "description": "Optional topic tag" },
+        "type": { "type": "string", "enum": ["doubt", "insight", "resource"], "description": "Post category" },
+        "content": { "type": "string", "description": "Post text body" },
+        "createdAt": { "type": "string", "description": "Creation timestamp text" },
+        "likes": { "type": "number", "description": "Likes counter" },
+        "replies": { "type": "array", "description": "List of student replies" }
+      },
+      "required": ["id", "authorId", "author", "type", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Student profile credentials and study preferences"
+    },
+    "/users/{userId}/subjects/{subjectId}": {
+      "schema": "Subject",
+      "description": "Student active curriculum subjects"
+    },
+    "/users/{userId}/schedules/{scheduleId}": {
+      "schema": "ScheduleItem",
+      "description": "Daily scheduled subtopics"
+    },
+    "/users/{userId}/revisions/{revisionId}": {
+      "schema": "RevisionItem",
+      "description": "Ebbinghaus spaced retention intervals"
+    },
+    "/communityPosts/{postId}": {
+      "schema": "CommunityPost",
+      "description": "Shared student community hub discussions"
+    }
+  }
+}
